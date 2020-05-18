@@ -6,3 +6,5 @@ Ivan Cañas
 Jonathan Molina
 Joan Martin
 Victor Fusalba
+
+test_viatge TEST PRINCIPALES
