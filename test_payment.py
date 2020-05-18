@@ -2,7 +2,7 @@
 """
 Created on Thu May 14 10:57:33 2020
 
-@author: Jonathan
+@author: Jonathan y Alejandro
 """
 
 from PaymentData import PaymentData
@@ -15,14 +15,13 @@ import pytest
     ("mastercard", "Ivan", 1533186, 888),
     ("visa", "Alejandro", 1533186, 888)])
     
-
-
-
-    
 def test_PaymentData(expected:str):
     
     tipo,nombre,numero,codigo= expected
     
     datos_bancarios= PaymentData(tipo,nombre,numero,codigo)
-    
+    bo= datos_bancarios.get_datapayment() == expected
+    if not bo:
+        print("Error")
     assert datos_bancarios.get_datapayment() == expected
+    

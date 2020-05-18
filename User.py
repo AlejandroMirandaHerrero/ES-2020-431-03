@@ -10,6 +10,11 @@ class User:
         
     def get_userdata(self):
         return self.nombre_completo, self.DNI, self.direccion_postal, self.num_tel, self.email
+    def seleccionarvuelo(l):
+        return l[0]
+    def seleccionarMetodo(l):
+        return "VISA"
+    
     
     
    

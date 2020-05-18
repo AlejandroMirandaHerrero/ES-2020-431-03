@@ -14,7 +14,9 @@ def test_AñadirDatos(expected:str):
     nombre_completo, DNI, direccion_postal, num_tel, email = expected
    
     datos_usuario = User(nombre_completo, DNI, direccion_postal, num_tel, email)
-    
+    bo= datos_usuario.get_userdata() == expected
+    if not bo:
+        print("Error")
     assert datos_usuario.get_userdata() == expected
     
 
