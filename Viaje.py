@@ -5,6 +5,7 @@ Created on Sun May 17 22:11:53 2020
 @author: aleja
 """
 from Skyscanner import Skyscanner
+from Hotel_list import Hotel_list
 from User import User
 from Flights import Flights
 from PaymentData import PaymentData
@@ -15,9 +16,11 @@ class Viaje:
         self.viajeros = viajerosi
         self.destinos = []
         self.vuelos = Flights()
-        self.precio= 0
-        self.numviajeros= len(self.viajeros)
-        self.usu=usuario
+        self.precio = 0
+        self.numviajeros = len(self.viajeros)
+        self.usu = usuario
+        self.hotel = Hotel_list()
+        self.alojamientos = []
         
     def agregardestino(self,destino):
         self.destinos.append(destino)
@@ -48,3 +51,20 @@ class Viaje:
             print("No se ha podido realizar la confirmacion")
             return False
         return b
+    
+      
+    def agregaralojamiento(self,alojamiento):
+        self.alojamientos.append(alojamiento)
+        l = Skyscanner.getlisthotel(alojamiento)
+        h = self.usu.seleccionarhotel(l)
+        self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
+        self.hotel.agregarhotel(h)
+        self.precio+=(self.hotel.preu_persona*self.numviajeros)
+        
+        
+        
+    def eliminaralojamiento(self,alojamiento):
+        self.alojamientos.remove(alojamiento)
+        self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
+        self.hotel.eliminarhotel(alojamiento)
+        self.precio+=(self.hotel.preu_opersona*self.numviajeros)
