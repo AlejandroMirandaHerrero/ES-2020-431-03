@@ -5,6 +5,7 @@ Created on Sun May 17 22:11:53 2020
 @author: aleja
 """
 from Skyscanner import Skyscanner
+from Alojamiento import Alojamiento
 from Hotel_list import Hotel_list
 from User import User
 from Flights import Flights
@@ -53,9 +54,9 @@ class Viaje:
         return b
     
       
-    def agregaralojamiento(self,alojamiento):
+     def agregaralojamiento(self,alojamiento):
         self.alojamientos.append(alojamiento)
-        l = Skyscanner.getlisthotel(alojamiento)
+        l = Alojamiento.getlisthotel(alojamiento)
         h = self.usu.seleccionarhotel(l)
         self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
         self.hotel.agregarhotel(h)
