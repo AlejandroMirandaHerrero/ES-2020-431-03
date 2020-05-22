@@ -16,7 +16,8 @@ class User:
         return "VISA"
     def seleccionaralojamiento(l):
         return l[0]
-    
+    def seleccionarcotxe(l):
+        return l[0]
     
     
    
