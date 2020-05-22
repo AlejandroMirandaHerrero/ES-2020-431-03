@@ -12,7 +12,5 @@ class Skyscanner:
     def getlistvuelo(self,destino):
         return []
     
-        
-    def getlisthotel(self,alojamiento):
-        return []
+ 
     
