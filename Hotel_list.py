@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
   
-from Hotel import Hotel 
+from Hotels import Hotels 
 class Hotel_list:
 
     def __init__(self):
@@ -9,7 +9,7 @@ class Hotel_list:
         self.preutotal=0
         self.numhotels=0
         
-    def agregarhotel(self,h: Hotel):
+    def agregarhotel(self,h: Hotels):
         self.hotels.append(h)
         self.numhotels+=1
         self.preutotal+=h.preu_persona
