@@ -6,11 +6,14 @@ Created on Sun May 17 22:11:53 2020
 """
 from Skyscanner import Skyscanner
 from Alojamiento import Alojamiento
+from Rentalcars import Rentalcars
 from Hotel_list import Hotel_list
 from User import User
 from Flights import Flights
 from PaymentData import PaymentData
+from Car_list import Car_list
 from Bank import Bank
+
 class Viaje:
 
     def __init__(self, usuario,viajerosi):
@@ -22,6 +25,7 @@ class Viaje:
         self.usu = usuario
         self.hotel = Hotel_list()
         self.alojamientos = []
+        self.coches = Car_list()
         
     def agregardestino(self,destino):
         self.destinos.append(destino)
@@ -53,6 +57,28 @@ class Viaje:
             return False
         return b
     
+    
+    def confirmareserva_coche(self):
+        b,metodo=self.pagarcoche()
+        if b:
+            s=Rentalcars()
+            if s.confirm_reserve(self.usu, self.coches):
+                return True
+            print("No se ha podido realizar la confirmacion")
+            return False
+        return b
+    
+    
+    def confirmareserva_alojamiento(self):
+        b,metodo=self.pagaralojamiento()
+        if b:
+            s=Alojamiento()
+            if s.confirm_reserve(self.usu, self.hotel):
+                return True
+            print("No se ha podido realizar la confirmacion")
+            return False
+        return b
+
       
      def agregaralojamiento(self,alojamiento):
         self.alojamientos.append(alojamiento)
