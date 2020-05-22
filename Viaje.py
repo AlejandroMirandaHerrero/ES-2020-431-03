@@ -1,17 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May 17 22:11:53 2020
 
-@author: aleja
-"""
 from Skyscanner import Skyscanner
 from Alojamiento import Alojamiento
 from Rentalcars import Rentalcars
 from Hotel_list import Hotel_list
 from User import User
 from Flights import Flights
+from Cars import Cars
 from PaymentData import PaymentData
-from Car_list import Car_list
+from cars_list import cars_list
 from Bank import Bank
 
 class Viaje:
@@ -25,7 +21,7 @@ class Viaje:
         self.usu = usuario
         self.hotel = Hotel_list()
         self.alojamientos = []
-        self.coches = Car_list()
+        self.cotxes = cars_list()
         
     def agregardestino(self,destino):
         self.destinos.append(destino)
@@ -34,11 +30,13 @@ class Viaje:
         self.precio=self.precio-self.vuelos.preutotal*self.numviajeros
         self.vuelos.agregarvol(v)
         self.precio+=(self.vuelos.preutotal*self.numviajeros)
+        
     def eliminardestino(self,destino):
         self.destinos.remove(destino)
         self.precio=self.precio-self.vuelos.preutotal*self.numviajeros
         self.vuelos.elimnarvol(destino)
         self.precio+=(self.vuelos.preutotal*self.numviajeros)
+        
     def pagarvuelo(self):
         metodopago=self.usu.seleccionarMetodo()
         p=PaymentData(metodopago, self.usu.nombre_completo, 15477952,1589)
@@ -80,7 +78,7 @@ class Viaje:
         return b
 
       
-     def agregaralojamiento(self,alojamiento):
+    def agregaralojamiento(self,alojamiento):
         self.alojamientos.append(alojamiento)
         l = Alojamiento.getlisthotel(alojamiento)
         h = self.usu.seleccionarhotel(l)
@@ -95,3 +93,15 @@ class Viaje:
         self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
         self.hotel.eliminarhotel(alojamiento)
         self.precio+=(self.hotel.preu_opersona*self.numviajeros)
+    
+    def agregarcotxe(self, cotxe, destino):
+        l= Rentalcars.getlistcotxe(destino)
+        v=self.usu.seleccionarcotxe(l)
+        self.cotxes.addcar(v)
+        self.precio+=self.cotxes.preutotal
+        
+        
+    def eliminarcotxe(self,codi_cotxe):
+        self.cotxes.rmvcars(codi_cotxe)
+        self.precio=(self.cotxes.preutotal)
+              
