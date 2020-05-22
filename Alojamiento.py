@@ -9,12 +9,11 @@ class Alojamiento:
     def __init__(self):
         pass
 
-    def confirm_reserve_vuelo(self, user: User, hotel: Hotel_list) -> bool:
+    def confirm_reserve(self, user: User, hotel: Hotel_list) -> bool:
         return True
     
-    
-    def getlistvuelo(self,alojamiento):
-        return []
+ 
+   
     
    
     
