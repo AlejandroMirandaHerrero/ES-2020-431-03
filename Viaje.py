@@ -45,6 +45,26 @@ class Viaje:
             return True, metodopago
         print("No se ha podido realizar el pago")
         return False, metodopago
+    
+    def pagarcoche(self): 
+        metodopago=self.usu.seleccionarMetodo()
+        p=PaymentData(metodopago, self.usu.nombre_completo, 15477952,1589)
+        b=Bank()
+        if b.do_payment(self.usu, p):
+            return True, metodopago
+        print("No se ha podido realizar el pago")
+        return False, metodopago
+    
+    def pagaralojamiento(self): 
+        metodopago=self.usu.seleccionarMetodo()
+        p=PaymentData(metodopago, self.usu.nombre_completo, 15477952,1589)
+        b=Bank()
+        if b.do_payment(self.usu, p):
+            return True, metodopago
+        print("No se ha podido realizar el pago")
+        return False, metodopago
+    
+    
     def confirmareserva(self):
         b,metodo=self.pagarvuelo()
         if b:
