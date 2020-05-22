@@ -1,5 +1,5 @@
-from . import User
-from . import Cars
+from User import User
+from Cars import Cars
 
 
 class Rentalcars():
@@ -9,3 +9,6 @@ class Rentalcars():
 
     def confirm_reserve(self, user: User, cars: Cars) -> bool:
         return True
+    
+    def getlistcotxe(self,destino):
+        return []
