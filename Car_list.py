@@ -1,24 +1,21 @@
-# -*- coding: utf-8 -*-
+from Cars import Cars
+   
 
-  
-from Cars import Cars 
-
-class Car_list:
-
+class cars_list:
+    
     def __init__(self):
-        self.coches=[]
+        self.cotxes=[]
         self.preutotal=0
-        self.numcoches=0
+        self.numcotxes=0
         
-    def agregarcoche(self,c: Cars):
-        self.coches.append(c)
-        self.numcoches+=1
-        self.preutotal+=c.preu_persona
+    def agregarcotxe(self,c: Cars):
+        self.cotxes.append(c)
+        self.numcotxes+=1
+        self.preutotal+=(c.preu_dia*c.durada)
         
-    def elimnarcoche(self,coche):
-        for i in self.coches:
-            if i.codi == coche:
-                self.numcoches -= 1
-                self.preutotal -= i.preu
-                self.coches.remove(i)
-
+    def eliminarcotxe(self,codi_cotxe):
+        for i in self.cotxes:
+            if i.codi==codi_cotxe:
+                self.numcotxes-=1
+                self.preutotal-=(i.preu_dia*i.durada)
+                self.cotxes.remove(i)
