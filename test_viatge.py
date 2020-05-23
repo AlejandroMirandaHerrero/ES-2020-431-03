@@ -2,8 +2,10 @@ import pytest
 from Viaje import Viaje
 from User import User
 from Vol import Vol
+from Cars import Cars
 from unittest.mock import patch
 from Skyscanner import Skyscanner
+from Rentalcars import Rentalcars
 @pytest.mark.parametrize("viajero,expected", [
     (["Antonio"],1),
     (["Antonio","Eva"],2),
@@ -138,7 +140,48 @@ def test_confirmareservareintenta(error,resultat):
     with patch('Skyscanner.Skyscanner.confirm_reserve') as mock_requests:
         mock_requests.side_effect=error
         assert a.confirmareserva()==resultat
+        
+@pytest.mark.parametrize("viajeros,ecotxe,destino, epreu", [
+    (["Antonio"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150), 
+    (["Antonio", "Juan"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150)
+    ])
+
+def test_agregarcotxe(viajeros,ecotxe,destino,epreu):
+    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
+    a=Viaje(u,viajeros)
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
+        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests1:
+            mock_requests1.return_value= Cars(1533186,"Mercedes",30,"Madrid",5)
+            a.agregarcotxe(ecotxe, destino)
+    assert (ecotxe==a.cotxes.cars and a.precio==epreu)
     
+@pytest.mark.parametrize("viajeros,ecotxe,destino, epreu", [
+    (["Antonio", "Juan"],[Cars(1533186,"Mercedes",30,"Madrid",5),(Cars(1234567,"BMW",50,"Madrid",5))], "Madrid",400)
+    ])
 
-
+def test_eliminarcotxe(viajeros,ecotxe,destino,epreu):
+    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
+    a=Viaje(u,viajeros)
+    
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
+        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests1:
+            mock_requests1.return_value= Cars(1533186,"Mercedes",30,"Madrid",5)
+            a.agregarcotxe(Cars(1533186,"Mercedes",30,"Madrid",5), "Madrid")
+            
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests3:
+        mock_requests3.return_value=  [Cars(1533186,"BMW",50,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests4:
+            mock_requests4.return_value= Cars(1234567,"BMW",50,"Madrid",5)
+            a.agregarcotxe(Cars(1234567,"BMW",50,"Madrid",5), "Madrid")
+            
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests5:
+        mock_requests5.return_value=  [Cars(696969,"Porsche",90,"Nueva York",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests6:
+            mock_requests6.return_value=Cars(696969,"Porsche",90,"Nueva York",5) 
+            a.agregarcotxe(Cars(696969,"Porsche",90,"Nueva York",5), "Nueva York")
+            
+    a.eliminarcotxe(696969)
+    assert (ecotxe==a.cotxes.cars and a.precio==epreu)
 
