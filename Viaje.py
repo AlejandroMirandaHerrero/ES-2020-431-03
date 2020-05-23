@@ -44,6 +44,7 @@ class Viaje:
         metodopago, ntarjeta, ncodigo =self.usu.rellenardatospago()
         p=PaymentData(metodopago, self.usu.nombre_completo, ntarjeta,ncodigo)
         aux=p.get_datapayment()
+        print("Import a pagar sense IVA: ", self.precio, " Import amb IVA: ", self.precio*1.21 )
         if aux!=False: 
             b=Bank()
             veri=False
@@ -124,3 +125,5 @@ class Viaje:
         self.precio-=(self.cotxes.preutotal)
         self.cotxes.rmvcars(destino)
         self.precio+=(self.cotxes.preutotal)
+    
+
