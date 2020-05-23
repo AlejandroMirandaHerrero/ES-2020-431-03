@@ -101,17 +101,13 @@ class Viaje:
     def agregaralojamiento(self,alojamiento, destino):
         l = Booking.getlisthotel(destino)
         h = self.usu.seleccionarhotel(l)
-        self.hotel.agregarhotel(h)
+        self.hotel.addhotel(h)
         self.precio=self.hotel.preutotal
    
         
-        
-        
-    def eliminaralojamiento(self,alojamiento):
-        self.alojamientos.remove(alojamiento)
-        self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
-        self.hotel.eliminarhotel(alojamiento)
-        self.precio+=(self.hotel.preu_opersona*self.numviajeros)
+    def eliminaralojamiento(self,codi_hotel):
+        self.hotel.rmvhotel(codi_hotel)
+        self.precio=(self.hotel.preutotal)
     
     def agregarcotxe(self, cotxe, destino):
         l= Rentalcars.getlistcotxe(destino)
@@ -123,4 +119,7 @@ class Viaje:
     def eliminarcotxe(self,codi_cotxe):
         self.cotxes.rmvcars(codi_cotxe)
         self.precio=(self.cotxes.preutotal)
+        
+
+
               
