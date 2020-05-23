@@ -58,7 +58,7 @@ class Viaje:
         if b:
             s=Skyscanner()
             r=Rentalcars()
-            s=Booking()
+            b=Booking()
             veri = False
             s_bool = False
             r_bool = False
