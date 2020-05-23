@@ -3,6 +3,7 @@ from Skyscanner import Skyscanner
 from Alojamiento import Alojamiento
 from Rentalcars import Rentalcars
 from Hotel_list import Hotel_list
+from Booking import Booking
 from User import User
 from Flights import Flights
 from Cars import Cars
@@ -35,7 +36,8 @@ class Viaje:
         self.precio=self.precio-self.vuelos.preutotal*self.numviajeros
         self.vuelos.elimnarvol(destino)
         self.precio+=(self.vuelos.preutotal*self.numviajeros)
-    def pagarvuelo(self):
+        
+    def pagar(self):
         metodopago=self.usu.seleccionarMetodo()
         p=PaymentData(metodopago, self.usu.nombre_completo, 15477952,1589)
         b=Bank()
@@ -49,8 +51,10 @@ class Viaje:
             i+=1
         print("No se ha podido realizar el pago")
         return False, metodopago
+    
+    
     def confirmareserva(self):
-        b,metodo=self.pagarvuelo()
+        b,metodo=self.pagar()
         if b:
             s=Skyscanner()
             veri=False
@@ -66,34 +70,40 @@ class Viaje:
         return b
     
     def confirmareserva_coche(self):
-        b,metodo=self.pagarcoche()
+        b,metodo=self.pagar()
         if b:
             s=Rentalcars()
-            if s.confirm_reserve(self.usu, self.coches):
+            if s.confirm_reserve(self.usu, self.cotxes):
                 return True
             print("No se ha podido realizar la confirmacion")
             return False
         return b
-    
+ 
     
     def confirmareserva_alojamiento(self):
-        b,metodo=self.pagaralojamiento()
+        b,metodo=self.pagar()
         if b:
-            s=Alojamiento()
-            if s.confirm_reserve(self.usu, self.hotel):
-                return True
+            s=Booking()
+            veri=False
+            i=0
+            while (i in range(0,5) and not veri):
+                veri=s.confirm_reserve(self.usu, self.hotel)
+                if veri:
+                    print("Se ha podido realizar la confirmación")
+                    return True
+                i+=1
             print("No se ha podido realizar la confirmacion")
             return False
         return b
+    
 
       
-    def agregaralojamiento(self,alojamiento):
-        self.alojamientos.append(alojamiento)
-        l = Alojamiento.getlisthotel(alojamiento)
+    def agregaralojamiento(self,alojamiento, destino):
+        l = Booking.getlisthotel(destino)
         h = self.usu.seleccionarhotel(l)
-        self.precio=self.precio-self.hotel.preu_persona*self.numviajeros
         self.hotel.agregarhotel(h)
-        self.precio+=(self.hotel.preu_persona*self.numviajeros)
+        self.precio=self.hotel.preutotal
+   
         
         
         
