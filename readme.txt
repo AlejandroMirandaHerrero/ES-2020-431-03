@@ -1,4 +1,4 @@
-Sprint 1
+Sprint 2
 Grup 431-03
 
 Alejandro Miranda
