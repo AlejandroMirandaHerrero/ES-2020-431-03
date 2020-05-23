@@ -1,6 +1,5 @@
 
 from Skyscanner import Skyscanner
-from Alojamiento import Alojamiento
 from Rentalcars import Rentalcars
 from Hotel_list import Hotel_list
 from Booking import Booking
