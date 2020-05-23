@@ -1,4 +1,4 @@
-Sprint 2
+Sprint 2 Version final
 Grup 431-03
 
 Alejandro Miranda
