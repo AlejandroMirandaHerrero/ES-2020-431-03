@@ -11,13 +11,13 @@ class User:
     def get_userdata(self):
         return self.nombre_completo, self.DNI, self.direccion_postal, self.num_tel, self.email
     def seleccionarvuelo(l):
-        return l[0]
-    def seleccionarMetodo(l):
-        return "VISA"
-    def seleccionarhotel(l):
-        return l[0]
-    def seleccionarcotxe(l):
-        return l[0]
+        return []
+    def rellenardatospago(self):
+        return ("VISA",5864598753,1234)
+    def seleccionarhotels(l):
+        return []
+    def seleccionarcotxes(l):
+        return []
     
     
    

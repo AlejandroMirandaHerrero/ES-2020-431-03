@@ -13,9 +13,10 @@ class cars_list:
         self.numcotxes+=1
         self.preutotal+=(c.preu_dia*c.durada)
         
-    def rmvcars(self,codi_cotxe):
-        for i in self.cars:
-            if i.codi==codi_cotxe:
+    def rmvcars(self,destino):
+        aux=self.cars[:]
+        for i in aux:
+            if i.lloc==destino:
                 self.numcotxes-=1
                 self.preutotal-=(i.preu_dia*i.durada)
                 self.cars.remove(i)

@@ -12,7 +12,8 @@ class Flights:
         self.preutotal+=v.PreuperPas
         
     def elimnarvol(self,destino):
-        for i in self.vols:
+        aux=self.vols[:]
+        for i in aux:
             if i.desti==destino:
                 self.numvols-=1
                 self.preutotal-=i.PreuperPas
