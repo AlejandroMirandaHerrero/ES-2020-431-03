@@ -3,6 +3,7 @@ from Viaje import Viaje
 from User import User
 from Vol import Vol
 from Cars import Cars
+from Hotels import Hotels
 from unittest.mock import patch
 from Skyscanner import Skyscanner
 from Rentalcars import Rentalcars
@@ -78,7 +79,7 @@ def test_pagamentvolsformapagamentError(metodo,error):
         mock_requests.return_value=error
         with patch('User.User.seleccionarMetodo') as mock_requests1:
             mock_requests1.return_value=metodo
-            resultado, me=a.pagarvuelo()
+            resultado, me=a.pagar()
     assert resultado==error and me==metodo
 
 @pytest.mark.parametrize("error", [
@@ -118,7 +119,7 @@ def test_pagamentreintenta(error,resultat):
             a.agregardestino("Nueva York")
     with patch('Bank.Bank.do_payment') as mock_requests:
         mock_requests.side_effect=error
-        resultado, me=a.pagarvuelo()
+        resultado, me=a.pagar()
     assert resultado==resultat
     
 @pytest.mark.parametrize("error,resultat", [
@@ -184,4 +185,41 @@ def test_eliminarcotxe(viajeros,ecotxe,destino,epreu):
             
     a.eliminarcotxe(696969)
     assert (ecotxe==a.cotxes.cars and a.precio==epreu)
+    
+    
+    
+
+@pytest.mark.parametrize("error,resultat", [
+([False,False,True],True),
+([False,False,False,False,False],False)
+])
+def test_hotelreintenta(error,resultat):
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(7654321,"Masia Cuatregats",4,2,5,10)]
+        with patch('User.User.seleccionarhotel') as mock_requests:
+            mock_requests.return_value=Hotels(7654321,"Masia Cuatregats",4,2,5,10)
+            a.agregaralojamiento((7654321,"Masia Cuatregats",4,2,5,10),"Tarragona")
+            
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(1234567,"Rafael Hoteles",4,2,5,30)]
+        with patch('User.User.seleccionarhotel') as mock_requests:
+            mock_requests.return_value=Hotels(1234567,"Rafael Hoteles",4,2,5,30)
+            a.agregaralojamiento((1234567,"Rafael Hoteles",4,2,5,30),"Barcelona")   
+
+            
+    with patch('Booking.Booking.getlisthotel') as mock_requests1:
+        mock_requests1.return_value=  [Hotels(157892,"Hotel W",4,2,5,40)]
+        with patch('User.User.seleccionarhotel') as mock_requests1:
+            mock_requests1.return_value=Hotels(157892,"Hotel W",4,2,5,40)
+            a.agregaralojamiento((157892,"Hotel W",4,2,5,40),"Barcelona")   
+        
+        
+    with patch('Booking.Booking.confirm_reserve') as mock_requests:
+        mock_requests.side_effect=error
+        assert a.confirmareserva_alojamiento()==resultat
+        
+        
+   
 
