@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-
-  
-from Hotels import Hotels 
+ 
+from Hotels import Hotels
 class Hotel_list:
 
     def __init__(self):
@@ -9,14 +8,14 @@ class Hotel_list:
         self.preutotal=0
         self.numhotels=0
         
-    def agregarhotel(self,h: Hotels):
+    def addhotel(self,h: Hotels):
         self.hotels.append(h)
         self.numhotels+=1
-        self.preutotal+=h.preu_persona
+        self.preutotal+=((h.preu_persona*h.numerohostes)*h.durada)
         
-    def elimnarhotel(self,hotel):
+    def rmvhotel(self,codihotel):
         for i in self.hotels:
-            if i.nom == hotel:
+            if i.codi == codihotel:
                 self.numhotels -= 1
-                self.preutotal -= i.preu_persona
+                self.preutotal -= ((i.preu_persona*i.numerohostes)*i.durada)
                 self.hotels.remove(i)
