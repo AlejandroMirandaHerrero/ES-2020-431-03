@@ -267,7 +267,46 @@ def test_eliminaralojamiento(viajeros,ehotel,destino,epreu):
             
     a.eliminaralojamiento(7654321)
     assert (ehotel==a.hotel.hotels and a.precio==epreu)
-        
-        
-   
 
+
+
+
+
+@pytest.mark.parametrize("error", [
+    (True),
+    (False)])
+def test_confirmareservacotxes(error):
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
+        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests1:
+            mock_requests1.return_value=Cars(1533186,"Mercedes",30,"Madrid",5)
+            a.agregarcotxe(Cars(1533186,"Mercedes",30,"Madrid",5), "Madrid")    
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests2:
+        mock_requests2.return_value=  [Cars(1234567,"BMW",50,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests3:
+            mock_requests3.return_value=Cars(1234567,"BMW",50,"Madrid",5)
+            a.agregarcotxe(Cars(1234567,"BMW",50,"Madrid",5), "Madrid")
+    with patch('Rentalcars.Rentalcars.confirm_reserve') as mock_requests4:
+        mock_requests4.return_value=error
+        assert a.confirmareserva_coche()==error
+        
+@pytest.mark.parametrize("error,resultat", [
+    ([False,True],True),
+    ([False,False,False,False,False],False)
+    ])
+def test_confirmareservareintentacotxes(error,resultat):
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
+        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests1:
+            mock_requests1.return_value=Cars(1533186,"Mercedes",30,"Madrid",5)
+            a.agregarcotxe(Cars(1533186,"Mercedes",30,"Madrid",5), "Madrid")   
+    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests2:
+        mock_requests2.return_value= [Cars(1234567,"BMW",50,"Madrid",5)]
+        with patch('User.User.seleccionarcotxe') as mock_requests3:
+            mock_requests3.return_value=Cars(1234567,"BMW",50,"Madrid",5)
+            a.agregarcotxe(Cars(1234567,"BMW",50,"Madrid",5), "Madrid")
+    with patch('Rentalcars.Rentalcars.confirm_reserve') as mock_requests4:
+        mock_requests4.side_effect=error
+        assert a.confirmareserva_coche()==resultat

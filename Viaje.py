@@ -73,11 +73,18 @@ class Viaje:
         b,metodo=self.pagar()
         if b:
             s=Rentalcars()
-            if s.confirm_reserve(self.usu, self.cotxes):
-                return True
+            veri=False
+            i=0
+            while (i in range(0,5) and not veri):
+                veri=s.confirm_reserve(self.usu, self.cotxes)
+                if veri:
+                    print("Se ha podido realizar la confirmación")
+                    return True
+                i+=1
             print("No se ha podido realizar la confirmacion")
             return False
         return b
+ 
  
     
     def confirmareserva_alojamiento(self):
@@ -119,7 +126,3 @@ class Viaje:
     def eliminarcotxe(self,codi_cotxe):
         self.cotxes.rmvcars(codi_cotxe)
         self.precio=(self.cotxes.preutotal)
-        
-
-
-              
