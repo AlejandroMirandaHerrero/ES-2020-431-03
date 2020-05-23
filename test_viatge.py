@@ -2,10 +2,8 @@ import pytest
 from Viaje import Viaje
 from User import User
 from Vol import Vol
-from Cars import Cars
 from unittest.mock import patch
 from Skyscanner import Skyscanner
-from Rentalcars import Rentalcars
 @pytest.mark.parametrize("viajero,expected", [
     (["Antonio"],1),
     (["Antonio","Eva"],2),
@@ -55,7 +53,7 @@ def test_eliminardestino(viajeros,destino,edestino,evuelo,epreu):
             mock_requests6.return_value=Vol(192548,"Barcelona",80,120)
             a.agregardestino("Barcelona")
     a.eliminardestino(destino)
-    assert (edestino==a.destinos and a.vuelos.vols==evuelo and a.precio==epreu )    
+    assert (edestino==a.destinos and a.vuelos.vols==evuelo and a.precio==epreu )
 
 @pytest.mark.parametrize("metodo,error", [
     ("VISA",False),
@@ -99,49 +97,48 @@ def test_confirmareserva(error):
     with patch('Skyscanner.Skyscanner.confirm_reserve') as mock_requests:
         mock_requests.return_value=error
         assert a.confirmareserva()==error
-
         
-@pytest.mark.parametrize("viajeros,ecotxe,destino, epreu", [
-    (["Antonio"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150), 
-    (["Antonio", "Juan"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150)
+@pytest.mark.parametrize("error,resultat", [
+    ([False,True],True),
+    ([False,False,False,False,False],False)
     ])
-
-def test_agregarcotxe(viajeros,ecotxe,destino,epreu):
-    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
-    a=Viaje(u,viajeros)
-    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
-        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
-        with patch('User.User.seleccionarcotxe') as mock_requests1:
-            mock_requests1.return_value= Cars(1533186,"Mercedes",30,"Madrid",5)
-            a.agregarcotxe(ecotxe, destino)
-    assert (ecotxe==a.cotxes.cars and a.precio==epreu)
+def test_pagamentreintenta(error,resultat):
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    with patch('Skyscanner.Skyscanner.getlistvuelo') as mock_requests:
+        mock_requests.return_value=  [Vol(157892,"Madrid",100,90)]
+        with patch('User.User.seleccionarvuelo') as mock_requests1:
+            mock_requests1.return_value=Vol(157892,"Madrid",100,90)
+            a.agregardestino("Madrid")   
+    with patch('Skyscanner.Skyscanner.getlistvuelo') as mock_requests:
+        mock_requests.return_value=  [Vol(185822,"Nueva York",200,450)]
+        with patch('User.User.seleccionarvuelo') as mock_requests1:
+            mock_requests1.return_value=Vol(185822,"Nueva York",200,450)
+            a.agregardestino("Nueva York")
+    with patch('Bank.Bank.do_payment') as mock_requests:
+        mock_requests.side_effect=error
+        resultado, me=a.pagarvuelo()
+    assert resultado==resultat
     
-@pytest.mark.parametrize("viajeros,ecotxe,destino, epreu", [
-    (["Antonio", "Juan"],[Cars(1533186,"Mercedes",30,"Madrid",5),(Cars(1234567,"BMW",50,"Madrid",5))], "Madrid",400)
+@pytest.mark.parametrize("error,resultat", [
+    ([False,True],True),
+    ([False,False,False,False,False],False)
     ])
-
-def test_eliminarcotxe(viajeros,ecotxe,destino,epreu):
-    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
-    a=Viaje(u,viajeros)
+def test_confirmareservareintenta(error,resultat):
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    with patch('Skyscanner.Skyscanner.getlistvuelo') as mock_requests:
+        mock_requests.return_value=  [Vol(157892,"Madrid",100,90)]
+        with patch('User.User.seleccionarvuelo') as mock_requests1:
+            mock_requests1.return_value=Vol(157892,"Madrid",100,90)
+            a.agregardestino("Madrid")   
+    with patch('Skyscanner.Skyscanner.getlistvuelo') as mock_requests:
+        mock_requests.return_value=  [Vol(185822,"Nueva York",200,450)]
+        with patch('User.User.seleccionarvuelo') as mock_requests:
+            mock_requests1.return_value=Vol(185822,"Nueva York",200,450)
+            a.agregardestino("Nueva York")
+    with patch('Skyscanner.Skyscanner.confirm_reserve') as mock_requests:
+        mock_requests.side_effect=error
+        assert a.confirmareserva()==resultat
     
-    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests:
-        mock_requests.return_value=  [Cars(1533186,"Mercedes",30,"Madrid",5)]
-        with patch('User.User.seleccionarcotxe') as mock_requests1:
-            mock_requests1.return_value= Cars(1533186,"Mercedes",30,"Madrid",5)
-            a.agregarcotxe(Cars(1533186,"Mercedes",30,"Madrid",5), "Madrid")
-            
-    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests3:
-        mock_requests3.return_value=  [Cars(1533186,"BMW",50,"Madrid",5)]
-        with patch('User.User.seleccionarcotxe') as mock_requests4:
-            mock_requests4.return_value= Cars(1234567,"BMW",50,"Madrid",5)
-            a.agregarcotxe(Cars(1234567,"BMW",50,"Madrid",5), "Madrid")
-            
-    with patch('Rentalcars.Rentalcars.getlistcotxe') as mock_requests5:
-        mock_requests5.return_value=  [Cars(696969,"Porsche",90,"Nueva York",5)]
-        with patch('User.User.seleccionarcotxe') as mock_requests6:
-            mock_requests6.return_value=Cars(696969,"Porsche",90,"Nueva York",5) 
-            a.agregarcotxe(Cars(696969,"Porsche",90,"Nueva York",5), "Nueva York")
-            
-    a.eliminarcotxe(696969)
-    assert (ecotxe==a.cotxes.cars and a.precio==epreu)
+
+
 
