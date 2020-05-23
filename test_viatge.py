@@ -143,8 +143,7 @@ def test_confirmareservareintenta(error,resultat):
         assert a.confirmareserva()==resultat
         
 @pytest.mark.parametrize("viajeros,ecotxe,destino, epreu", [
-    (["Antonio"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150), 
-    (["Antonio", "Juan"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150)
+    (["Antonio"],[Cars(1533186,"Mercedes",30,"Madrid",5)],"Madrid",150)
     ])
 
 def test_agregarcotxe(viajeros,ecotxe,destino,epreu):
@@ -187,8 +186,6 @@ def test_eliminarcotxe(viajeros,ecotxe,destino,epreu):
     assert (ecotxe==a.cotxes.cars and a.precio==epreu)
     
     
-    
-
 @pytest.mark.parametrize("error,resultat", [
 ([False,False,True],True),
 ([False,False,False,False,False],False)
@@ -219,6 +216,57 @@ def test_hotelreintenta(error,resultat):
     with patch('Booking.Booking.confirm_reserve') as mock_requests:
         mock_requests.side_effect=error
         assert a.confirmareserva_alojamiento()==resultat
+        
+        
+@pytest.mark.parametrize("viajeros,ehotel,destino, epreu", [
+    (["Antonio","Raul", "Sonia","Lucia"],[Hotels(157892,"Hotel W",4,2,5,40),Hotels(1234567,"Rafael Hoteles",8,2,5,40)],"Barcelona",2400), 
+    ])
+
+def test_agregaralojamiento(viajeros,ehotel,destino,epreu):
+    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
+    a=Viaje(u,viajeros)
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(157892,"Hotel W",4,2,5,40)]
+        with patch('User.User.seleccionarhotel') as mock_requests1:
+            mock_requests1.return_value= Hotels(157892,"Hotel W",4,2,5,40)
+            a.agregaralojamiento(ehotel, "Barcelona")
+            
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(1234567,"Rafael Hoteles",8,2,5,40)]
+        with patch('User.User.seleccionarhotel') as mock_requests2:
+            mock_requests2.return_value= Hotels(1234567,"Rafael Hoteles",8,2,5,40)
+            a.agregaralojamiento(ehotel, destino)
+        assert (ehotel==a.hotel.hotels and a.precio==epreu)
+    
+  
+@pytest.mark.parametrize("viajeros,ehotel,destino, epreu", [
+    (["Antonio","Raul", "Sonia","Lucia"],[Hotels(157892,"Hotel W",4,2,5,40),Hotels(1234567,"Rafael Hoteles",8,2,5,40)],"Barcelona",2400), 
+    ])
+
+def test_eliminaralojamiento(viajeros,ehotel,destino,epreu):
+    u=User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com")
+    a=Viaje(u,viajeros)
+    
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(157892,"Hotel W",4,2,5,40)]
+        with patch('User.User.seleccionarhotel') as mock_requests1:
+            mock_requests1.return_value= Hotels(157892,"Hotel W",4,2,5,40)
+            a.agregaralojamiento(ehotel, "Barcelona")
+            
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(1234567,"Rafael Hoteles",8,2,5,40)]
+        with patch('User.User.seleccionarhotel') as mock_requests2:
+            mock_requests2.return_value= Hotels(1234567,"Rafael Hoteles",8,2,5,40)
+            a.agregaralojamiento(ehotel, destino)
+            
+    with patch('Booking.Booking.getlisthotel') as mock_requests:
+        mock_requests.return_value=  [Hotels(7654321,"Masia Cuatregats",4,2,5,10)]
+        with patch('User.User.seleccionarhotel') as mock_requests3:
+            mock_requests3.return_value=Hotels(7654321,"Masia Cuatregats",4,2,5,10)
+            a.agregaralojamiento((7654321,"Masia Cuatregats",4,2,5,10),"Tarragona")
+            
+    a.eliminaralojamiento(7654321)
+    assert (ehotel==a.hotel.hotels and a.precio==epreu)
         
         
    
