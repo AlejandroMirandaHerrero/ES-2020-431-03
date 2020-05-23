@@ -5,6 +5,7 @@ from Vol import Vol
 from Cars import Cars
 from Hotels import Hotels
 from unittest.mock import patch
+from PaymentData import PaymentData
 from Skyscanner import Skyscanner
 from Rentalcars import Rentalcars
 @pytest.mark.parametrize("viajero,expected", [
@@ -310,3 +311,19 @@ def test_confirmareservareintentacotxes(error,resultat):
     with patch('Rentalcars.Rentalcars.confirm_reserve') as mock_requests4:
         mock_requests4.side_effect=error
         assert a.confirmareserva_coche()==resultat
+        
+@pytest.mark.parametrize ("tipo,nom,numero,codi,resultat", [
+    ("visa", "Jonathan", 1234567890, 5555, ("visa", "Jonathan", 1234567890, 5555)),
+    ("", "Joan", 4545454545, 8888,False),
+    ("visa", "Victor", 1987654321, 6969,("visa", "Victor", 1987654321, 6969)),
+    ("mastercard", "Ivan", 1533186, 1,False),
+    ("visa", "Alejandro", 1111111111, 1010,("visa", "Alejandro", 1111111111, 1010))
+    ])
+    
+def test_PaymentData(tipo,nom,numero,codi, resultat):
+    
+    a=Viaje(User("Antonio", "47238223L", "08291", "711736632","antonio@gmail.com"),["Antonio","Oscar", "Juan"])
+    p=PaymentData(tipo,nom,numero,codi)
+    resultado= p.get_datapayment()
+    assert resultado == resultat
+    
