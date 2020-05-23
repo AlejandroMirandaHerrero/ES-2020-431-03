@@ -53,6 +53,32 @@ class Viaje:
         return False, metodopago
     
     
+    def confirmareserva_total(self): #ns si es lo k quereis
+        b, meodo =self.pagar()
+        if b:
+            s=Skyscanner()
+            r=Rentalcars()
+            s=Booking()
+            veri = False
+            s_bool = False
+            r_bool = False
+            b_bool = False
+            i = 0
+            while i in range(0,5) and not veri:
+                s_bool = s.confirm_reserve(self.usu, self.vuelos)
+                r_bool = r.confirm_reserve(self.usu, self.cotxes)
+                b_bool = b.confirm_reserve(self.usu, self.cotxes)
+                veri = s_bool and r_bool and b_bool
+                if veri:
+                    print("Se ha podido realizar la confirmación")
+                    return True
+                i += 1
+            
+            print("No se ha podido realizar la confirmación")
+            return False
+        return b
+    
+    
     def confirmareserva(self):
         b,metodo=self.pagar()
         if b:
